@@ -36,7 +36,7 @@ var files = [
 
 	{ path: 'exporters/ColladaExporter.js', dependencies: [], ignoreList: [] },
 	{ path: 'exporters/DRACOExporter.js', dependencies: [], ignoreList: [ 'Geometry' ] },
-	{ path: 'exporters/GLTFExporter.js', dependencies: [], ignoreList: [ 'AnimationClip', 'Camera', 'Geometry', 'Material', 'Mesh', 'Object3D', 'Scenes', 'ShaderMaterial'] },
+	{ path: 'exporters/GLTFExporter.js', dependencies: [], ignoreList: [ 'AnimationClip', 'Camera', 'Geometry', 'Material', 'Mesh', 'Object3D', 'Scenes', 'ShaderMaterial' ] },
 	{ path: 'exporters/MMDExporter.js', dependencies: [ { name: 'MMDParser', path: 'libs/mmdparser.module.js' } ], ignoreList: [] },
 	{ path: 'exporters/OBJExporter.js', dependencies: [], ignoreList: [] },
 	{ path: 'exporters/PLYExporter.js', dependencies: [], ignoreList: [] },
@@ -63,7 +63,7 @@ var files = [
 	{ path: 'lines/Wireframe.js', dependencies: [ { name: 'LineSegmentsGeometry', path: 'lines/LineSegmentsGeometry.js' }, { name: 'LineMaterial', path: 'lines/LineMaterial.js' } ], ignoreList: [] },
 	{ path: 'lines/WireframeGeometry2.js', dependencies: [ { name: 'LineSegmentsGeometry', path: 'lines/LineSegmentsGeometry.js' } ], ignoreList: [] },
 
-	{ path: 'loaders/3MFLoader.js', dependencies: [ { name: 'JSZip', path: 'libs/jszip.module.min.js' } ], ignoreList: [] },
+	{ path: 'loaders/3MFLoader.js', dependencies: [ { name: 'fflate', path: 'libs/fflate.module.min.js', importAll: true } ], ignoreList: [] },
 	{ path: 'loaders/AMFLoader.js', dependencies: [ { name: 'JSZip', path: 'libs/jszip.module.min.js' } ], ignoreList: [] },
 	{ path: 'loaders/AssimpLoader.js', dependencies: [], ignoreList: [] },
 	{ path: 'loaders/BasisTextureLoader.js', dependencies: [], ignoreList: [] },
@@ -314,7 +314,15 @@ function convert( path, exampleDependencies, ignoreList ) {
 
 	for ( var dependency of exampleDependencies ) {
 
-		imports.push( `import { ${dependency.name} } from '${pathPrefix}${dependency.path}';` );
+		if ( dependency.importAll === true ) {
+
+			imports.push( `import * as ${dependency.name} from '${pathPrefix}${dependency.path}';` );
+
+		} else {
+
+			imports.push( `import { ${dependency.name} } from '${pathPrefix}${dependency.path}';` );
+
+		}
 
 	}
 
